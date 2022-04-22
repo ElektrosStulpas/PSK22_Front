@@ -1,9 +1,23 @@
 import React, { Component } from "react";
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import Navbar from "./Components/Navbar";
+import Home from "./Components/Home";
+import CreateListing from "./Components/CreateListing";
 
 class App extends Component {
     render () {
         return (
-            <h1>This is the index page</h1>
+            <Router>
+                <div className="App">
+                    <Navbar />
+                    <div className="content">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/create-listing" element={<CreateListing />} />
+                        </Routes>
+                    </div>
+                </div>
+            </Router>
         )
     }
 }
