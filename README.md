@@ -1,10 +1,12 @@
-# Getting Started with Create React App
+# Frontend for PSK22
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Disclaimer
 
-## Available Scripts
+After cloning the repo you need to install node modules by running this command in project directory:
 
-In the project directory, you can run:
+### `npm install`
+
+To run the app locally for development run this in project directory:
 
 ### `npm start`
 
