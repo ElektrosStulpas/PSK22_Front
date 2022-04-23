@@ -18,3 +18,12 @@ code {
   align-items: center;
   border-bottom: 1px solid #000000;
 }
+
+.createListingForm {
+  display: block;
+  font-size:15px;
+  /* padding:4px 2px; */
+  width:70px;
+  /* margin:2px 0 20px 10px;  */
+  /*not sure what all these do for now, but it shows the form as list*/
+}
