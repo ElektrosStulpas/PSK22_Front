@@ -5,6 +5,7 @@ import Home from "./Components/Home";
 import CreateListing from "./Components/CreateListing";
 
 class App extends Component {
+
     render () {
         return (
             <Router>
@@ -12,8 +13,13 @@ class App extends Component {
                     <Navbar />
                     <div className="content">
                         <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/create-listing" element={<CreateListing />} />
+                            <Route 
+                                path="/" 
+                                element={<Home />}
+                                />
+                            <Route 
+                                path="/create-listing"
+                                element={<CreateListing />}/>
                         </Routes>
                     </div>
                 </div>
