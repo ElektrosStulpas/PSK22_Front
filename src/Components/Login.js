@@ -23,11 +23,12 @@ const Login = () => {
     var initialState = {
         username: "",
         password: "",
-        loading: false,
-        message: "",
     }
 
     const [state, setState] = useState(initialState);
+    //same as register, rerender variables need their own state to avoid async troubles
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
 
     var updateState = (name, value) => {
         setState({
@@ -38,8 +39,8 @@ const Login = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        updateState("message", "");
-        updateState("loading", true);
+        setMessage("");
+        setLoading(true);
 
         form.current.validateAll();
         if (checkBtn.current.context._errors.length === 0) {
@@ -56,12 +57,12 @@ const Login = () => {
                             error.response.data.message) ||
                         error.message ||
                         error.toString();
-                    updateState("message", resMessage);
-                    updateState("loading", false);
+                    setMessage(resMessage);
+                    setLoading(false);
                 }
             );
         } else {
-            updateState("loading", false);
+            setLoading(false);
         }
     }
 
@@ -98,16 +99,16 @@ const Login = () => {
                     </div>
                     <div className="form-group">
                         <button className="btn btn-primary btn-block" disabled={state.loading}>
-                            {state.loading && (
+                            {loading && (
                                 <span className="spinner-border spinner-border-sm"></span>
                             )}
                             <span>Login</span>
                         </button>
                     </div>
-                    {state.message && (
+                    {message && (
                         <div className="form-group">
                             <div className="alert alert-danger" role="alert">
-                                {state.message}
+                                {message}
                             </div>
                         </div>
                     )}

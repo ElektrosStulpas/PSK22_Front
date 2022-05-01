@@ -53,11 +53,12 @@ const Register = () => {
         username: "",
         email: "",
         password: "",
-        successful: false,
-        message: "",
     }
 
     const [state, setState] = useState(initialState);
+    //separate states for message and successful as they're used for rerendering and changing them at once messes up due to setState async
+    const [successful, setSuccessful] = useState(false);
+    const [message, setMessage] = useState("");
 
     var updateState = (name, value) => {
         setState({
@@ -68,16 +69,17 @@ const Register = () => {
 
     const handleRegister = (e) => {
         e.preventDefault();
-        updateState("message", "");
-        updateState("successful", false);
+        setMessage("");
+        setSuccessful(false);
+        updateState("successful", true);
         form.current.validateAll();
         if (checkBtn.current.context._errors.length === 0) {
             AuthService.register(state.username, state.email, state.password).then(
                 (response) => {
                     console.log(response);
                     // updateState("message", response.data.message); //only created user is returned right now
-                    updateState("message", "Successfully registered");
-                    updateState("successful", true);
+                    setMessage("Successfully registered");
+                    setSuccessful(true);
                 },
                 (error) => { //currently no errors are produced from register
                     const resMessage =
@@ -86,8 +88,8 @@ const Register = () => {
                             error.response.data.message) ||
                         error.message ||
                         error.toString();
-                    updateState("message", resMessage);
-                    updateState("successful", false);
+                    setMessage(resMessage);
+                    setSuccessful(false);
                 }
             );
         }
@@ -102,7 +104,7 @@ const Register = () => {
                     className="profile-img-card"
                 />
                 <Form onSubmit={handleRegister} ref={form}>
-                    {!state.successful && (
+                    {!successful && (
                         <div>
                             <div className="form-group">
                                 <label htmlFor="username">Username</label>
@@ -142,13 +144,13 @@ const Register = () => {
                             </div>
                         </div>
                     )}
-                    {state.message && (
+                    {message && (
                         <div className="form-group">
                             <div
-                                className={state.successful ? "alert alert-success" : "alert alert-danger"}
+                                className={successful ? "alert alert-success" : "alert alert-danger"}
                                 role="alert"
                             >
-                                {state.message}
+                                {message}
                             </div>
                         </div>
                     )}
