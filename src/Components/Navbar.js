@@ -14,9 +14,9 @@ const Navbar = () => {
                         Log in
                     </button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/register">
                     <button type="button">
-                        Sign up
+                        Register
                     </button>
                 </Link>
             </div>
