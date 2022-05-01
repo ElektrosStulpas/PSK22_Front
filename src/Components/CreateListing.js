@@ -6,14 +6,12 @@ import PicUpload from './PicUpload';
 
 const CreateListing = () => {
     var initialState = {
-        listingId: 0,
-        ownerUsername: '',
+        // listingId: 0,
+        // ownerUsername: '', // instead of this get auth header
         title: '',
-        price: '',
+        daysPrice: '',
         city: '',
-        collateral: '',
-        phone: '',
-        email: '',
+        deposit: '',
         description: '',
         startDate: '',
         endDate: '',
@@ -25,7 +23,6 @@ const CreateListing = () => {
     var navigate = useNavigate();
 
     var handleChange = (name, value) => {
-        // const {name, value} = event.target
 
         //TODO possible to do input validation here?
         setState({
@@ -35,25 +32,24 @@ const CreateListing = () => {
     }
 
     async function postData(url = '', data) {
+        // add auth header to headers of fetch
         const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: data
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
         });
-    
-        if(response.status === 200)
-        {
+
+        if (response.status === 200) {
             // locationUrl = response.headers.get('Location');
             // locationUrl = locationUrl.replace('http', 'https');
             return response.json(); // parses JSON response into native JavaScript objects
         }
-        else
-        {
+        else {
             throw new Error("Something went wrong when sending POST request. Status got: " + response.status);
         }
-      }
+    }
 
     var handleSubmit = () => {
         // postData('https://gariunaicloud.azurewebsites.net/api/Listings', JSON.stringify(state))
@@ -68,11 +64,11 @@ const CreateListing = () => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
     const onChange = (dates) => {
-      const [start, end] = dates;
-      setStartDate(start);
-      setEndDate(end);
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
 
-      setState({
+        setState({
             ...state,
             startDate: start.toJSON(),
             endDate: end === null ? null : end.toJSON(),
@@ -90,12 +86,12 @@ const CreateListing = () => {
                     id="title"
                     value={state.title}
                     onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="price">Price/day</label>
+                <label htmlFor="daysPrice">Price/day</label>
                 <input
                     type="text"
-                    name="price"
-                    id="price"
-                    value={state.price}
+                    name="daysPrice"
+                    id="daysPrice"
+                    value={state.daysPrice}
                     onChange={(event) => handleChange(event.target.name, event.target.value)} />
                 <label htmlFor="city">City</label>
                 <input
@@ -104,26 +100,12 @@ const CreateListing = () => {
                     id="city"
                     value={state.city}
                     onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="collateral">Collateral</label>
+                <label htmlFor="deposit">Deposit</label>
                 <input
                     type="text"
-                    name="collateral"
-                    id="collateral"
-                    value={state.collateral}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="phone">Phone</label>
-                <input
-                    type="text"
-                    name="phone"
-                    id="phone"
-                    value={state.phone}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="email">Email</label>
-                <input
-                    type="text"
-                    name="email"
-                    id="email"
-                    value={state.email}
+                    name="deposit"
+                    id="deposit"
+                    value={state.deposit}
                     onChange={(event) => handleChange(event.target.name, event.target.value)} />
                 <label htmlFor="description">Description</label>
                 <textarea
@@ -140,10 +122,10 @@ const CreateListing = () => {
                     selectsRange
                     inline
                 />
-                <input type="button" value="Create the listing" onClick={handleSubmit}/>
+                <input type="button" value="Create the listing" onClick={handleSubmit} />
             </form>
-            <button onClick={() => {navigate('/')}}>Cancel</button>
-            <PicUpload currentState={[state, setState]} handleChange={handleChange}/>
+            <button onClick={() => { navigate('/') }}>Cancel</button>
+            <PicUpload currentState={[state, setState]} handleChange={handleChange} />
         </div>
     )
 }
