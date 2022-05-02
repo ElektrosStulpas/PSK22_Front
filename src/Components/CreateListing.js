@@ -3,22 +3,27 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import PicUpload from './PicUpload';
+import axios from 'axios';
+import authHeader from "../services/auth-header";
+const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
 const CreateListing = () => {
-    var initialState = {
-        // listingId: 0,
-        // ownerUsername: '', // instead of this get auth header
+    var listingState = {
         title: '',
-        daysPrice: '',
+        daysPrice: 0,
         city: '',
-        deposit: '',
+        deposit: 0,
         description: '',
+    }
+
+    var otherState = {
         startDate: '',
         endDate: '',
         pic: null
     }
 
-    const [state, setState] = useState(initialState);
+    const [state, setState] = useState(listingState);
+    const [tempState, setTempState] = useState(otherState);
 
     var navigate = useNavigate();
 
@@ -31,34 +36,38 @@ const CreateListing = () => {
         })
     }
 
-    async function postData(url = '', data) {
-        // add auth header to headers of fetch
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: data
-        });
+    var handleTempChange = (name, value) => {
 
-        if (response.status === 200) {
-            // locationUrl = response.headers.get('Location');
-            // locationUrl = locationUrl.replace('http', 'https');
-            return response.json(); // parses JSON response into native JavaScript objects
-        }
-        else {
-            throw new Error("Something went wrong when sending POST request. Status got: " + response.status);
-        }
+        setTempState({
+            ...state,
+            [name]: value,
+        })
+    }
+
+    const registerListing = () => {
+        return axios.post(API_URL, state, { headers: authHeader() })
+            .then((response) => {
+                console.log(response)
+                return response
+            });
     }
 
     var handleSubmit = () => {
-        // postData('https://gariunaicloud.azurewebsites.net/api/Listings', JSON.stringify(state))
-        //         .then(response => {
-        //         console.log(response);
-        //         }).catch(error => {
-        //             console.error(error);
-        //         });
-        navigate("/")
+        registerListing().then(
+            (response) => {
+                console.log(response.data)
+                navigate("/")
+            },
+            (error) => {
+                const resMessage =
+                    (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+                console.log(resMessage)
+            }
+        )
     }
 
     const [startDate, setStartDate] = useState(new Date());
@@ -68,7 +77,7 @@ const CreateListing = () => {
         setStartDate(start);
         setEndDate(end);
 
-        setState({
+        setTempState({
             ...state,
             startDate: start.toJSON(),
             endDate: end === null ? null : end.toJSON(),
@@ -88,7 +97,7 @@ const CreateListing = () => {
                     onChange={(event) => handleChange(event.target.name, event.target.value)} />
                 <label htmlFor="daysPrice">Price/day</label>
                 <input
-                    type="text"
+                    type="number"
                     name="daysPrice"
                     id="daysPrice"
                     value={state.daysPrice}
@@ -102,7 +111,7 @@ const CreateListing = () => {
                     onChange={(event) => handleChange(event.target.name, event.target.value)} />
                 <label htmlFor="deposit">Deposit</label>
                 <input
-                    type="text"
+                    type="number"
                     name="deposit"
                     id="deposit"
                     value={state.deposit}
@@ -125,7 +134,7 @@ const CreateListing = () => {
                 <input type="button" value="Create the listing" onClick={handleSubmit} />
             </form>
             <button onClick={() => { navigate('/') }}>Cancel</button>
-            <PicUpload currentState={[state, setState]} handleChange={handleChange} />
+            <PicUpload currentState={[tempState, setTempState]} handleChange={handleTempChange} />
         </div>
     )
 }
