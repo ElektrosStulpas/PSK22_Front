@@ -3,45 +3,31 @@ import { Link } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import { UserContext } from "../services/UserContext";
 
-const Navbar = () => {
+import {Navbar, Nav, Container} from 'react-bootstrap'
+
+
+const navbar = () => {
     const { user, login, logout } = useContext(UserContext);
+
     return (
-        <nav className="navbar">
-            <div className="home_logo">
-                <h1 >
-                    <Link to="/">RenTool</Link>
-                </h1>
-            </div>
-            {user ? (
-                <div className="navbar-nav ml-auto">
-                    <Link to="/profile">
-                        <button type="button">
-                            Profile
-                        </button>
-                    </Link>
-                    <Link to="/login">
-                        <button type="button" onClick={() => AuthService.logout(logout)}>
-                            Log out
-                        </button>
-                    </Link>
-                </div>
-            ) : (
-                <div className="navbar-nav ml-auto">
-                    <Link to="/login">
-                        <button type="button">
-                            Log in
-                        </button>
-                    </Link>
-                    <Link to="/register">
-                        <button type="button">
-                            Register
-                        </button>
-                    </Link>
-                </div>
-            )
-            }
-        </nav >
+        <Navbar bg="white" expand="lg">
+            <Container>
+                <Navbar.Brand as={Link} to="/" className="ms-auto">
+                    <img src={process.env.PUBLIC_URL + '/logo.png'} alt="RenTool"/>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mx-auto">
+                    <Nav.Link as={Link} to="/create-listing">Create a listing</Nav.Link>
+                </Nav>
+                <Nav className="me-1">
+                    <Nav.Link as={Link} to="/login">Log in</Nav.Link>
+                    <Nav.Link as={Link} to="/signup" onClick={() => AuthService.logout(logout)}>Sign up</Nav.Link>
+                </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     )
 }
 
-export default Navbar;
+export default navbar;
