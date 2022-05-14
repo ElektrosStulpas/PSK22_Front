@@ -19,13 +19,53 @@ code {
   border-bottom: 1px solid #000000;
 }
 
-.createListingForm {
+.new-listing-form-container {
+  text-align: center;
+}
+
+.new-listing-form-container h1 {
+  padding-top: 20px;
+}
+
+.new-listing-form {
+  text-align: left;
+  background-color: #fff;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px 20px;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+  margin-top: 20px;
+}
+
+.form-element label {
   display: block;
-  font-size:15px;
-  /* padding:4px 2px; */
-  width:70px;
-  /* margin:2px 0 20px 10px;  */
-  /*not sure what all these do for now, but it shows the form as list*/
+  margin-top: 10px;
+}
+
+.form-element input,
+.form-element select,
+.form-element textarea {
+    border: 1px solid #777;
+    border-radius: 2px;
+    font-family: inherit;
+    padding: 10px;
+    display: block;
+    width: 100%;
+}
+
+.form-element img  {
+  padding: 10px;
+  display: block;
+  width: 100%;
+}
+
+.form-element input[type="submit"] {
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 21px;
+  display: block;
+  width: 100%;
+  margin-top: 50px;
 }
 
 .city {
@@ -35,5 +75,9 @@ code {
 }
 
 .totalPrice {
-  text-align: right;
+  text-align: left;
+}
+
+.daysPrice {
+  text-align: center;
 }
