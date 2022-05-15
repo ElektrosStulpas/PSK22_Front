@@ -3,38 +3,15 @@ import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import authHeader from "../services/auth-header";
+import { Form, Button, Image } from 'react-bootstrap';
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
 const CreateListing = () => {
-    var listingState = {
-        title: '',
-        daysPrice: 0,
-        city: '',
-        deposit: 0,
-        description: '',
-        image: null
-    }
-
-    const [state, setState] = useState(listingState);
+    const [image, setImage] = useState(null)
 
     var navigate = useNavigate();
 
-    var handleChange = (name, value) => {
-        console.log(name, value)
-        setState({
-            ...state,
-            [name]: value,
-        })
-    }
-
-    const registerListing = () => {
-        var payload = {
-            title: state.title,
-            daysPrice: state.daysPrice,
-            city: state.city,
-            deposit: state.deposit,
-            description: state.description,
-        }
+    const registerListing = (payload) => {
         return axios.post(API_URL, payload, { headers: authHeader() })
             .then((response) => {
                 console.log(response)
@@ -48,8 +25,15 @@ const CreateListing = () => {
         return axios.put(API_URL + `${listingId}/image`, formData, { headers: authHeader() });
     }
 
-    var handleSubmit = () => {
-        registerListing()
+    var handleSubmit = (formData) => {
+        var newListing = {
+            title: formData.title.value,
+            daysPrice: formData.daysPrice.value,
+            city: formData.city.value,
+            deposit: formData.deposit.value,
+            description: formData.description.value,
+        }
+        registerListing(newListing)
             .then(response => response.data)
             .catch(error => {
                 const resMessage =
@@ -60,99 +44,87 @@ const CreateListing = () => {
                     error.toString();
                 console.log(resMessage)
             })
-            //image uploading will fail silently px yr
+
             .then(newListingId => {
-                if (state.image != null) {
-                    return updateListingImage(newListingId, state.image)
+                if (image != null) {
+                    return updateListingImage(newListingId, image)
                 }
             })
             .then(_ => navigate("/"))
     }
 
     const imagePreview = () => {
-        return state.image ? <img src={URL.createObjectURL(state.image)} /> : <div />
+        return image ? <Image src={URL.createObjectURL(image)} className='img-fluid mx-auto d-block' style={{ "max-height": "18rem" }} /> : <div />
     }
 
     return (
-
-        <div className="new-listing-form-container">
+        //should probably move this form to separate component and reuse in edit listing
+        <div className='new-listing-form-container'>
             <h1>Create new listing</h1>
-            <form class='new-listing-form' onSubmit={e => {e.preventDefault(); handleSubmit()}}>
-
-                <div className="form-element">
-                    <label htmlFor="title">Title</label>
-                    <input
-                        type="text"
+            <Form onSubmit={e => {e.preventDefault(); handleSubmit(e.target)}}>
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="title">Title</Form.Label>
+                    <Form.Control
                         name="title"
                         id="title"
-                        value={state.title}
-                        required
-                        onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                </div>
+                        required/>
+                </Form.Group>
 
-                <div className="form-element">
-                    <label htmlFor="city">City</label>
-                    <input
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="city">City</Form.Label>
+                    <Form.Control
                         type="text"
                         name="city"
                         id="city"
-                        required
-                        value={state.city}
-                        onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                </div>
+                        required/>
+                </Form.Group>
 
-                <div className="form-element">
-                    <label htmlFor="daysPrice">Price/day</label>
-                    <input
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="daysPrice">Price/day</Form.Label>
+                    <Form.Control
                         type="number"
                         name="daysPrice"
                         id="daysPrice"
-                        required
-                        value={state.daysPrice}
-                        onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                </div>
+                        required/>
+                </Form.Group>
 
-                <div className="form-element">
-                    <label htmlFor="deposit">Deposit</label>
-                    <input
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="deposit">Deposit</Form.Label>
+                    <Form.Control
                         type="number"
                         name="deposit"
                         id="deposit"
-                        required
-                        value={state.deposit}
-                        onChange={(event) => handleChange(event.target.name, event.target.value)} />
+                        required/>
+                </Form.Group>
 
-                </div>
-
-                <div className="form-element">
-                    <label htmlFor="description">Description</label>
-                    <textarea
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="description">Description</Form.Label>
+                    <Form.Control
                         name="description"
                         id="description"
-                        required
-                        value={state.description}
-                        onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                </div>
+                        as = "textarea"
+                        required/>
+                </Form.Group>
 
-                <div className="form-element">
-                    <label htmlFor='image'>Picture</label>
-                    <input
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor='image'>Picture</Form.Label>
+                    <Form.Control className="mb-3"
                         nameid="image"
                         id="image"
                         type="file"
                         onChange={(event) => {
-                            handleChange("image", event.target.files[0])
+                            setImage(event.target.files[0])
                         }} />
                     {imagePreview()}
+                </Form.Group>
+
+                <div className='d-grid gap-2'>
+                    <Button variant="primary" type="submit"> Create </Button>
+                    {' '}
+                    <Button variant="secondary" onClick={() => { navigate('/') }}> Cancel </Button>
                 </div>
 
-                <div class="form-element">
-                    <input type="submit" value="Create the listing"/>
-                </div>
-
-            </form>
-            <button onClick={() => { navigate('/') }}>Cancel</button>
-
+            </Form>
         </div>
     )
 }
