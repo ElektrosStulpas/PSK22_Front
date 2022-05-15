@@ -6,6 +6,8 @@ import Home from "./Components/Home";
 import CreateListing from "./Components/CreateListing";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import EditListing from "./Components/EditListing";
+import MyListings from "./Components/MyListings";
 
 const App = () => {
 
@@ -21,6 +23,12 @@ const App = () => {
                     <Route
                         path="/create-listing"
                         element={<CreateListing />} />
+                    <Route
+                        path="/edit-listing"
+                        element={<EditListing />} />
+                    <Route
+                        path="/my-listings"
+                        element={<MyListings />} />
                     <Route
                         path="/login"
                         element={<Login />} />

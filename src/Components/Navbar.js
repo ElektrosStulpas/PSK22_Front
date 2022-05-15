@@ -19,6 +19,9 @@ const NavigationBar = () => {
                 {user ?
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mx-auto">
+                            <Nav.Link as={Link} to="/my-listings">My listings</Nav.Link>
+                        </Nav>
+                        <Nav className="mx-auto">
                             <Nav.Link as={Link} to="/create-listing">Create a listing</Nav.Link>
                         </Nav>
                         <Nav className="me-1">
