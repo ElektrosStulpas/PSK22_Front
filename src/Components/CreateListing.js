@@ -1,64 +1,41 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
-import PicUpload from './PicUpload';
 import axios from 'axios';
 import authHeader from "../services/auth-header";
+import { Form, Button, Image } from 'react-bootstrap';
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
 const CreateListing = () => {
-    var listingState = {
-        title: '',
-        daysPrice: 0,
-        city: '',
-        deposit: 0,
-        description: '',
-    }
-
-    var otherState = {
-        startDate: '',
-        endDate: '',
-        pic: null
-    }
-
-    const [state, setState] = useState(listingState);
-    const [tempState, setTempState] = useState(otherState);
+    const [image, setImage] = useState(null)
 
     var navigate = useNavigate();
 
-    var handleChange = (name, value) => {
-
-        //TODO possible to do input validation here?
-        setState({
-            ...state,
-            [name]: value,
-        })
-    }
-
-    var handleTempChange = (name, value) => {
-
-        setTempState({
-            ...state,
-            [name]: value,
-        })
-    }
-
-    const registerListing = () => {
-        return axios.post(API_URL, state, { headers: authHeader() })
+    const registerListing = (payload) => {
+        return axios.post(API_URL, payload, { headers: authHeader() })
             .then((response) => {
                 console.log(response)
                 return response
             });
     }
 
-    var handleSubmit = () => {
-        registerListing().then(
-            (response) => {
-                console.log(response.data)
-                navigate("/")
-            },
-            (error) => {
+    const updateListingImage = (listingId, image) => {
+        const formData = new FormData()
+        formData.append("file", image)
+        return axios.put(API_URL + `${listingId}/image`, formData, { headers: authHeader() });
+    }
+
+    var handleSubmit = (formData) => {
+        var newListing = {
+            title: formData.title.value,
+            daysPrice: formData.daysPrice.value,
+            city: formData.city.value,
+            deposit: formData.deposit.value,
+            description: formData.description.value,
+        }
+        registerListing(newListing)
+            .then(response => response.data)
+            .catch(error => {
                 const resMessage =
                     (error.response &&
                         error.response.data &&
@@ -66,75 +43,88 @@ const CreateListing = () => {
                     error.message ||
                     error.toString();
                 console.log(resMessage)
-            }
-        )
+            })
+
+            .then(newListingId => {
+                if (image != null) {
+                    return updateListingImage(newListingId, image)
+                }
+            })
+            .then(_ => navigate("/"))
     }
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(null);
-    const onChange = (dates) => {
-        const [start, end] = dates;
-        setStartDate(start);
-        setEndDate(end);
-
-        setTempState({
-            ...state,
-            startDate: start.toJSON(),
-            endDate: end === null ? null : end.toJSON(),
-        })
-    };
+    const imagePreview = () => {
+        return image ? <Image src={URL.createObjectURL(image)} className='img-fluid mx-auto d-block' style={{ "max-height": "18rem" }} /> : <div />
+    }
 
     return (
-        <div className='createListingForm'>
-            <h1>Listing creation</h1>
-            <form>
-                <label htmlFor="title">Title</label>
-                <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    value={state.title}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="daysPrice">Price/day</label>
-                <input
-                    type="number"
-                    name="daysPrice"
-                    id="daysPrice"
-                    value={state.daysPrice}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="city">City</label>
-                <input
-                    type="text"
-                    name="city"
-                    id="city"
-                    value={state.city}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="deposit">Deposit</label>
-                <input
-                    type="number"
-                    name="deposit"
-                    id="deposit"
-                    value={state.deposit}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="description">Description</label>
-                <textarea
-                    name="description"
-                    id="description"
-                    value={state.description}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="datepicker">Pick availability frame:</label>
-                <DatePicker
-                    selected={startDate}
-                    onChange={onChange}
-                    startDate={startDate}
-                    endDate={endDate}
-                    selectsRange
-                    inline
-                />
-                <input type="button" value="Create the listing" onClick={handleSubmit} />
-            </form>
-            <button onClick={() => { navigate('/') }}>Cancel</button>
-            <PicUpload currentState={[tempState, setTempState]} handleChange={handleTempChange} />
+        //should probably move this form to separate component and reuse in edit listing
+        <div className='new-listing-form-container'>
+            <h1>Create new listing</h1>
+            <Form onSubmit={e => {e.preventDefault(); handleSubmit(e.target)}}>
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="title">Title</Form.Label>
+                    <Form.Control
+                        name="title"
+                        id="title"
+                        required/>
+                </Form.Group>
+
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="city">City</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="city"
+                        id="city"
+                        required/>
+                </Form.Group>
+
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="daysPrice">Price/day</Form.Label>
+                    <Form.Control
+                        type="number"
+                        name="daysPrice"
+                        id="daysPrice"
+                        required/>
+                </Form.Group>
+
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="deposit">Deposit</Form.Label>
+                    <Form.Control
+                        type="number"
+                        name="deposit"
+                        id="deposit"
+                        required/>
+                </Form.Group>
+
+                <Form.Group className="mb-1">
+                    <Form.Label htmlFor="description">Description</Form.Label>
+                    <Form.Control
+                        name="description"
+                        id="description"
+                        as = "textarea"
+                        required/>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor='image'>Picture</Form.Label>
+                    <Form.Control className="mb-3"
+                        nameid="image"
+                        id="image"
+                        type="file"
+                        onChange={(event) => {
+                            setImage(event.target.files[0])
+                        }} />
+                    {imagePreview()}
+                </Form.Group>
+
+                <div className='d-grid gap-2'>
+                    <Button variant="primary" type="submit"> Create </Button>
+                    {' '}
+                    <Button variant="secondary" onClick={() => { navigate('/') }}> Cancel </Button>
+                </div>
+
+            </Form>
         </div>
     )
 }

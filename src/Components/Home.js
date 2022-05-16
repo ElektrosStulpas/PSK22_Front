@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
-
-import {Button,Card,Container,Row,Col,Form, Dropdown, DropdownButton, Modal, ModalDialog, ModalBody} from 'react-bootstrap'; // eslint-disable-line
-
+import { Button, Card, Container, Row, Col, Form, Pagination } from 'react-bootstrap';
+import { ListingCard } from "./ListingCard"
 
 const Home = () => {
     const [listings, setListing] = useState([])
@@ -129,11 +128,6 @@ const Home = () => {
             </Modal.Footer>
         </Modal>
 
-    function calcPrice(dayPrice, days) {
-        return dayPrice * days
-    }
-
-    
     return (
         <Container>
         <div className="home">
@@ -154,25 +148,14 @@ const Home = () => {
                             } else if (listing.title.toLowerCase().includes(query.toLowerCase())) {
                                 return listing;
                             }
-                        }).map(listing => (
-                            <Col key={listing.listingId} style={{marginBottom:'10px'}}>
-                                <Card style={{ width: '18rem',height:'100%'}}>
-                                <Card.Body className="d-flex flex-column">
-                                    <Card.Title style={{textAlign:'center'}}>{listing.title}</Card.Title>
-                                        <Card.Img variant="top" src="https://via.placeholder.com/200x200" /> 
-                                        <Card.Text disabled>{listing.description}</Card.Text> 
-                                    <Row>
-                                        <Col><Card.Subtitle className="mb-2" >{listing.daysPrice}€/day</Card.Subtitle></Col>
-                                        <Col><Card.Subtitle className="mb-2 h6 small totalPrice" >Total: {calcPrice(listing.daysPrice,days)}€</Card.Subtitle> </Col>
-                                    </Row>
-                                    <Card.Subtitle className="mb-2 city">City: {listing.city}</Card.Subtitle>
-                                </Card.Body>
-                                </Card>
-                            </Col> 
-                        ))}
+                        }).map(listing =>
+                            <Col key={listing.listingId} style={{ marginBottom: '10px' }}>
+                                <ListingCard {...listing} />
+                            </Col>
+                        )}
                     </Row>
                 )}
-        </div>
+            </div>
         </Container>
     )
 }
