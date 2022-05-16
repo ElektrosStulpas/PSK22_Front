@@ -20,14 +20,16 @@ const NavigationBar = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mx-auto">
                             <Nav.Link as={Link} to="/create-listing">Create a listing</Nav.Link>
+                            <Nav.Link as={Link} to="/order-history">Order history</Nav.Link>
+
                         </Nav>
-                        <Nav className="me-1">
+                        <Nav className="justify-content-end">
                             <Nav.Link as={Link} to="/" onClick={() => AuthService.logout(logout)}>Log out</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                     :
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-1">
+                    <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                        <Nav className="mr-auto">
                             <Nav.Link as={Link} to="/login">Log in</Nav.Link>
                             <Nav.Link as={Link} to="/register">Sign up</Nav.Link>
                         </Nav>
