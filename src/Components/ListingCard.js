@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react"
-import { Button, Card, Container, Row, Col, Form, Pagination } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 export const ListingCard = (listing) => {
     console.log(listing)
@@ -31,7 +31,7 @@ export const ListingCard = (listing) => {
                 <Card.Img style={{ 'object-fit': 'scale-down', 'height': '15rem' }} variant="top" src={imageUrl} />
                 {/* <Card.Text disabled>{listing.description}</Card.Text> */}
                 <Card.Subtitle className="mb-3 daysPrice" >{listing.daysPrice}€ / day</Card.Subtitle>
-                <Card.Subtitle className="mb-3 totalPrice" >Total: {calcPrice(listing.daysPrice, days).toFixed(2)}€</Card.Subtitle> 
+                <Card.Subtitle className="mb-3 totalPrice" >Total: {calcPrice(listing.daysPrice, days).toFixed(2)}€</Card.Subtitle>
                 <Card.Subtitle className="mb-0 city">City: {listing.city}</Card.Subtitle>
             </Card.Body>
         </Card>

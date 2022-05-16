@@ -1,40 +1,42 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ListingForm from './ListingForm';
 import authHeader from "../services/auth-header";
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
 const EditListing = () => {
 
     const location = useLocation();
-    const [state, setState] = useState(location.state);
+    const [image, setImage] = useState(null)
 
     var navigate = useNavigate();
 
-    var handleChange = (name, value) => {
-
-        //TODO possible to do input validation here?
-        setState({
-            ...state,
-            [name]: value,
-        })
-    }
-
-    const updateListing = () => {
-        return axios.put(API_URL + state.listingId, state, { headers: authHeader() })
+    const updateListing = (payload) => {
+        return axios.put(API_URL + location.state.listingId, payload, { headers: authHeader() })
             .then((response) => {
                 console.log(response)
                 return response
             });
     }
 
-    var handleSubmit = () => {
-        updateListing().then(
-            (response) => {
-                console.log(response.data)
-                navigate("/")
-            },
-            (error) => {
+    const updateListingImage = (listingId, image) => {
+        const formData = new FormData()
+        formData.append("file", image)
+        return axios.put(API_URL + `${listingId}/image`, formData, { headers: authHeader() });
+    }
+
+    var handleSubmit = (formData) => {
+        var listing = {
+            title: formData.title.value,
+            daysPrice: formData.daysPrice.value,
+            city: formData.city.value,
+            deposit: formData.deposit.value,
+            description: formData.description.value,
+        }
+        updateListing(listing)
+            .then(response => response.data)
+            .catch(error => {
                 const resMessage =
                     (error.response &&
                         error.response.data &&
@@ -42,51 +44,17 @@ const EditListing = () => {
                     error.message ||
                     error.toString();
                 console.log(resMessage)
-            }
-        )
+            })
+            .then(() => {
+                updateListingImage(location.state.listingId, image)
+            })
+            .then(_ => navigate("/"))
     }
 
     return (
-        <div className='editListingForm'>
+        <div className='edit-listing-form-container'>
             <h1>Editing listing</h1>
-            <form>
-                <label htmlFor="title">Title</label>
-                <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    value={state.title}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="daysPrice">Price/day</label>
-                <input
-                    type="number"
-                    name="daysPrice"
-                    id="daysPrice"
-                    value={state.daysPrice}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="city">City</label>
-                <input
-                    type="text"
-                    name="city"
-                    id="city"
-                    value={state.city}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="deposit">Deposit</label>
-                <input
-                    type="number"
-                    name="deposit"
-                    id="deposit"
-                    value={state.deposit}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <label htmlFor="description">Description</label>
-                <textarea
-                    name="description"
-                    id="description"
-                    value={state.description}
-                    onChange={(event) => handleChange(event.target.name, event.target.value)} />
-                <input type="button" value="Save changes" onClick={handleSubmit} />
-            </form>
-            <button onClick={() => { navigate('/') }}>Cancel</button>
+            <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} listingState={location.state} />
         </div>
     )
 }

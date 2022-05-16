@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authHeader from "../services/auth-header";
 import { Table } from "react-bootstrap";
+import { UserContext } from "../services/UserContext";
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
 const MyListings = () => {
 
+    const { userGlobalState, login, logout } = useContext(UserContext);
+
     const [listings, setListings] = useState([])
 
     var navigate = useNavigate();
-    // const getMyListings = () => {
-    //     fetch("https://gariunaicloud.azurewebsites.net/api/Listings")
-    //         .then(response => {
-    //             console.log(response.json())
-    //             return response.json()
-    //         })
-    //         .then(data => {
-    //             console.log(data)
-    //             setListing(data)
-    //         })
-    // }
 
     const getMyListings = () => {
         return axios.get(API_URL, { headers: authHeader() })
@@ -34,6 +26,20 @@ const MyListings = () => {
     useEffect(() => {
         getMyListings()
     }, [])
+
+    const deleteListing = (listing) => {
+        axios.delete(API_URL + listing.listingId, { headers: authHeader() })
+            .then(() => { getMyListings() },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    console.log(resMessage)
+                })
+    }
 
     return (
         <div className="mylistings">
@@ -49,7 +55,7 @@ const MyListings = () => {
                 <tbody>
                     {listings.length > 0 && (
                         listings.filter(listing => {
-                            if (listing.ownerUsername === 'tautvilis')
+                            if (listing.ownerUsername === userGlobalState.userName)
                                 return listing;
                         }).map(listing =>
                             <tr key={listing.id}>
@@ -57,6 +63,7 @@ const MyListings = () => {
                                 <td key={listing.id}>{listing.city}</td>
                                 <td key={listing.id}>{listing.description}</td>
                                 <button onClick={() => { navigate('/edit-listing', { state: listing }) }}>Edit</button>
+                                <button onClick={() => { deleteListing(listing) }}>Delete</button>
                             </tr>)
                     )}
                 </tbody>
