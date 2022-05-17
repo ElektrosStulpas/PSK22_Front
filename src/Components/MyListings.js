@@ -62,8 +62,8 @@ const MyListings = () => {
                                 <td key={listing.id}>{listing.title}</td>
                                 <td key={listing.id}>{listing.city}</td>
                                 <td key={listing.id}>{listing.description}</td>
-                                <Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button>
-                                <Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button>
+                                <td key={listing.id}><Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button></td>
+                                <td key={listing.id}><Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button></td>
                             </tr>
                         )
                     )}
