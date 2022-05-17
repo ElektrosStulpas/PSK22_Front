@@ -4,18 +4,18 @@ const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
 
-    const [user, setUser] = useState("");
+    const [userGlobalState, setUserGlobalState] = useState(null);
 
-    const login = (name) => {
-        setUser(name);
+    const login = (user) => {
+        setUserGlobalState(user);
     }
 
     const logout = () => {
-        setUser("");
+        setUserGlobalState(null);
     }
 
     return (
-        <UserContext.Provider value={{ user, login, logout }}>
+        <UserContext.Provider value={{ userGlobalState, login, logout }}>
             {children}
         </UserContext.Provider>
     )

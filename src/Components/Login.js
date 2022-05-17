@@ -5,6 +5,8 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../services/auth.service";
 import { UserContext } from "../services/UserContext";
+import axios from "axios";
+import authHeader from "../services/auth-header";
 
 const required = (value) => {
     if (!value) {
@@ -17,7 +19,7 @@ const required = (value) => {
 }
 
 const Login = () => {
-    const { user, login } = useContext(UserContext);
+    const { userGlobalState, login } = useContext(UserContext);
     var navigate = useNavigate();
     const form = useRef();
     const checkBtn = useRef();
@@ -46,9 +48,13 @@ const Login = () => {
 
         form.current.validateAll();
         if (checkBtn.current.context._errors.length === 0) {
-            AuthService.login(state.username, state.password, login).then(
+            //saving jwt token to local storage
+            AuthService.login(state.username, state.password).then(
                 () => {
-                    console.log(AuthService.getCurrentUser())
+                    axios.get('https://gariunaicloud.azurewebsites.net/api/Users/me', { headers: authHeader() })
+                        .then((response) => {
+                            login(response.data) // user context login
+                        })
                     navigate("/");//for now navigating to home, but could navigate to profile
                 },
                 (error) => { //currently system doesn't produce errors
@@ -68,7 +74,7 @@ const Login = () => {
     }
 
     return (
-        user ? <div>Hello context</div> :
+        userGlobalState ? <div>Hello context</div> :
             <div className="col_md-12">
                 <div className="card card-container">
                     <img

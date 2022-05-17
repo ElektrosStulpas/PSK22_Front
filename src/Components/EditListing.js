@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import "react-datepicker/dist/react-datepicker.css";
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import authHeader from "../services/auth-header";
-import { Form, Button, Image } from 'react-bootstrap';
 import ListingForm from './ListingForm';
+import authHeader from "../services/auth-header";
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
-const CreateListing = () => {
+const EditListing = () => {
+
+    const location = useLocation();
     const [image, setImage] = useState(null)
 
     var navigate = useNavigate();
 
-    const registerListing = (payload) => {
-        return axios.post(API_URL, payload, { headers: authHeader() })
+    const updateListing = (payload) => {
+        return axios.put(API_URL + location.state.listingId, payload, { headers: authHeader() })
             .then((response) => {
                 console.log(response)
                 return response
@@ -27,14 +27,14 @@ const CreateListing = () => {
     }
 
     var handleSubmit = (formData) => {
-        var newListing = {
+        var listing = {
             title: formData.title.value,
             daysPrice: formData.daysPrice.value,
             city: formData.city.value,
             deposit: formData.deposit.value,
             description: formData.description.value,
         }
-        registerListing(newListing)
+        updateListing(listing)
             .then(response => response.data)
             .catch(error => {
                 const resMessage =
@@ -45,20 +45,18 @@ const CreateListing = () => {
                     error.toString();
                 console.log(resMessage)
             })
-            .then(newListingId => {
-                if (image != null) {
-                    return updateListingImage(newListingId, image)
-                }
+            .then(() => {
+                updateListingImage(location.state.listingId, image)
             })
             .then(_ => navigate("/"))
     }
 
     return (
-        <div className='new-listing-form-container'>
-            <h1>Create new listing</h1>
-            <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} />
+        <div className='edit-listing-form-container'>
+            <h1>Editing listing</h1>
+            <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} listingState={location.state} />
         </div>
     )
 }
 
-export default CreateListing;
+export default EditListing;

@@ -7,7 +7,13 @@ import { Navbar, Nav, Container } from 'react-bootstrap'
 
 
 const NavigationBar = () => {
-    const { user, login, logout } = useContext(UserContext);
+
+    const { userGlobalState, login, logout } = useContext(UserContext);
+
+    const logOut = () => {
+        AuthService.logout() //throw out JWT
+        logout()
+    }
 
     return (
         <Navbar bg="white" expand="lg">
@@ -16,13 +22,16 @@ const NavigationBar = () => {
                     <img src={process.env.PUBLIC_URL + '/logo.png'} alt="RenTool" />
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                {user ?
+                {userGlobalState ?
                     <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="mx-auto">
+                            <Nav.Link as={Link} to="/my-listings">My listings</Nav.Link>
+                        </Nav>
                         <Nav className="mx-auto">
                             <Nav.Link as={Link} to="/create-listing">Create a listing</Nav.Link>
                         </Nav>
                         <Nav className="me-1">
-                            <Nav.Link as={Link} to="/" onClick={() => AuthService.logout(logout)}>Log out</Nav.Link>
+                            <Nav.Link as={Link} to="/" onClick={() => logOut()}>Log out</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                     :
