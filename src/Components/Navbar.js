@@ -33,7 +33,11 @@ const NavigationBar = () => {
 
                         </Nav>
                         <Nav className="justify-content-end">
+<<<<<<< HEAD
                             <Nav.Link as={Link} to="/" onClick={() => logOut()}>Log out</Nav.Link>
+=======
+                            <Nav.Link as={Link} to="/" onClick={() => AuthService.logout(logout)}>Log out</Nav.Link>
+>>>>>>> ef3e11168601a42e4bc7fded956b44ce1ce74f15
                         </Nav>
                     </Navbar.Collapse>
                     :
