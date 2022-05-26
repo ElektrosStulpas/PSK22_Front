@@ -6,6 +6,7 @@ import Home from "./Components/Home";
 import CreateListing from "./Components/CreateListing";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import Profile from "./Components/Profile";
 
 const App = () => {
 
@@ -27,6 +28,9 @@ const App = () => {
                     <Route
                         path="/register"
                         element={<Register />} />
+                    <Route
+                        path="/Profile"
+                        element={<Profile />} />
                 </Routes>
             </div>
         </div>

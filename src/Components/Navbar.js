@@ -21,6 +21,9 @@ const NavigationBar = () => {
                         <Nav className="mx-auto">
                             <Nav.Link as={Link} to="/create-listing">Create a listing</Nav.Link>
                         </Nav>
+                        <Nav className="mx-auto">
+                            <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                        </Nav>
                         <Nav className="me-1">
                             <Nav.Link as={Link} to="/" onClick={() => AuthService.logout(logout)}>Log out</Nav.Link>
                         </Nav>
