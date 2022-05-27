@@ -20,11 +20,7 @@ const Profile = () => {
 
   async function getProfileData() {
     axios.get(API_URL + "me", { headers: authHeader() }).then(response => setInitialState(response.data))
-    console.log("PYZDA BACKENDUI")
   }
-
-  //useEffect(getProfileData())
-
 
 
   useEffect(() => { getProfileData(); }, [])
@@ -34,14 +30,12 @@ const Profile = () => {
   }
 
   function updateUserData(formData){
-    console.log("I enter updateUserData")
     if (editing === false) {
       console.log("Im inside the if")
       var iWantToSendPost = {
         email: formData.email.value,
         phoneNumber: formData.phoneNumber.value,
       }
-      console.log(iWantToSendPost)
       axios.post(API_URL + "me", iWantToSendPost, { headers: authHeader() });
     }
   }
@@ -54,10 +48,6 @@ const Profile = () => {
           <strong>{initialState.userName}</strong> profile
         </h3>
       </header>
-      {/* <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{" "}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p> */}
       <Form onSubmit={e => {e.preventDefault(); updateUserData(e.target); SetEditing()}}>
         <fieldset disabled={editing}>
           <Form.Group>
