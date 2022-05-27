@@ -11,7 +11,7 @@ const register = (username, email, password) => {
     });
 }
 
-const login = (username, password, context_func) => {
+const login = (username, password) => {
     return axios.post(API_URL + "login", {
         username,
         password,
@@ -19,15 +19,13 @@ const login = (username, password, context_func) => {
         .then((response) => {
             if (response.data) { //maybe should alter response to where it would return token with accessToken as key
                 localStorage.setItem("user", response.data)
-                context_func(response.data); //does login in global context
             }
             return response.data
         });
 }
 
-const logout = (context_func) => {
+const logout = () => {
     localStorage.removeItem("user");
-    context_func(); //does logout in global context
 }
 
 const getCurrentUser = () => {
