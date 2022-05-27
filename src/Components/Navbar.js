@@ -32,6 +32,9 @@ const NavigationBar = () => {
                             <Nav.Link as={Link} to="/order-history">Order history</Nav.Link>
 
                         </Nav>
+                        <Nav className="mx-auto">
+                            <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                        </Nav>
                         <Nav className="justify-content-end">
                             <Nav.Link as={Link} to="/" onClick={() => logOut()}>Log out</Nav.Link>
                         </Nav>
