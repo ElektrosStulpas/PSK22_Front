@@ -41,3 +41,8 @@ code {
 .daysPrice {
   text-align: center;
 }
+
+.dropdownFilter > .dropdown-menu {
+  height: 200px;
+  overflow-y: scroll;
+}
