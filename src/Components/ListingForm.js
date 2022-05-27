@@ -3,8 +3,22 @@ import { Form, Button, Image } from 'react-bootstrap';
 
 const ListingForm = (props) => {
 
-    const { handleSubmit, imageState, listingState } = props
+    const handleSubmit = props.handleSubmit
+    const imageState = props.imageState
+    const listingState = props.listingState
+    const editing = props.editing != undefined && props.editing === true
+    const conflictingListing = props.conflictingListing
     const [image, setImage] = imageState
+
+    const getConflictText = (property) => {
+        if (!editing || !listingState || !conflictingListing)
+            return ""
+
+        if (listingState[property] == conflictingListing[property])
+            return ""
+
+        return "Conflicting version: \"" + conflictingListing[property] + "\""
+    }
 
     var navigate = useNavigate();
 
@@ -21,6 +35,9 @@ const ListingForm = (props) => {
                     id="title"
                     defaultValue={listingState ? listingState.title : ""}
                     required />
+                <Form.Text className="text-danger">
+                    {getConflictText("title")}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-1">
@@ -31,6 +48,9 @@ const ListingForm = (props) => {
                     id="city"
                     defaultValue={listingState ? listingState.city : ""}
                     required />
+                <Form.Text className="text-danger">
+                    {getConflictText("city")}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-1">
@@ -41,6 +61,9 @@ const ListingForm = (props) => {
                     id="daysPrice"
                     defaultValue={listingState ? listingState.daysPrice : ""}
                     required />
+                <Form.Text className="text-danger">
+                    {getConflictText("daysPrice")}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-1">
@@ -51,6 +74,9 @@ const ListingForm = (props) => {
                     id="deposit"
                     defaultValue={listingState ? listingState.deposit : ""}
                     required />
+                <Form.Text className="text-danger">
+                    {getConflictText("deposit")}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-1">
@@ -61,10 +87,13 @@ const ListingForm = (props) => {
                     as="textarea"
                     defaultValue={listingState ? listingState.description : ""}
                     required />
+                <Form.Text className="text-danger">
+                    {getConflictText("description")}
+                </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
-                <Form.Label htmlFor='image'>Picture</Form.Label>
+                <Form.Label htmlFor='image'>{editing? "New Picture" : "Picture"}</Form.Label>
                 <Form.Control className="mb-3"
                     nameid="image"
                     id="image"
@@ -76,7 +105,7 @@ const ListingForm = (props) => {
             </Form.Group>
 
             <div className='d-grid gap-2'>
-                <Button variant="primary" type="submit"> Create </Button>
+                <Button variant="primary" type="submit"> {editing ? "Update" : "Create"} </Button>
                 {' '}
                 <Button variant="secondary" onClick={() => { navigate('/') }}> Cancel </Button>
             </div>

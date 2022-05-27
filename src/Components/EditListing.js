@@ -9,15 +9,14 @@ const EditListing = () => {
 
     const location = useLocation();
     const [image, setImage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState("")
+    const [listingState, setListingState] = useState(location.state)
+    const [conflictingState, setConflictingState] = useState(null)
 
-    var navigate = useNavigate();
+    const navigate = useNavigate();
 
     const updateListing = (payload) => {
         return axios.put(API_URL + location.state.listingId, payload, { headers: authHeader() })
-            .then((response) => {
-                console.log(response)
-                return response
-            });
     }
 
     const updateListingImage = (listingId, image) => {
@@ -26,35 +25,51 @@ const EditListing = () => {
         return axios.put(API_URL + `${listingId}/image`, formData, { headers: authHeader() });
     }
 
-    var handleSubmit = (formData) => {
-        var listing = {
+    const getCurrentListing = () => {
+        return axios.get(API_URL + listingState.listingId, { headers: authHeader() })
+    }
+
+    const handleSubmit = (formData) => {
+        const listing = {
+            ...listingState,
             title: formData.title.value,
             daysPrice: formData.daysPrice.value,
             city: formData.city.value,
             deposit: formData.deposit.value,
             description: formData.description.value,
         }
+
         updateListing(listing)
-            .then(response => response.data)
-            .catch(error => {
-                const resMessage =
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-                console.log(resMessage)
+            .then(() => {
+                if(image)
+                    updateListingImage(location.state.listingId, image)
             })
             .then(() => {
-                updateListingImage(location.state.listingId, image)
+                navigate("/")
             })
-            .then(_ => navigate("/"))
+            .catch(error => {
+                if (error.response.status === 409) {
+                    //Concurrency error (eTag missmatch)
+                    getCurrentListing()
+                        .then(response => {
+                            setListingState({
+                                ...listing,
+                                eTag: response.data.eTag, 
+                            })
+                            setConflictingState(response.data)
+                        })
+                    setErrorMessage("Oops, it seems that this listing has been modified in another session. Press update to overwrite")
+                } else {
+                    setErrorMessage("Editing failed with error: " + error.text)
+                }
+            })
     }
 
     return (
-        <div className='edit-listing-form-container'>
-            <h1>Editing listing</h1>
-            <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} listingState={location.state} />
+        <div className='listing-form-container'>
+            <h1>Update listing</h1>
+            <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} listingState={listingState} editing={true} conflictingListing={conflictingState}/>
+            <p className='text-danger'>{errorMessage}</p>
         </div>
     )
 }
