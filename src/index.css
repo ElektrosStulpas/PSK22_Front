@@ -46,3 +46,7 @@ code {
   height: 200px;
   overflow-y: scroll;
 }
+
+.daysToRent {
+  text-align: center;
+}

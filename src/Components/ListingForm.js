@@ -98,6 +98,7 @@ const ListingForm = (props) => {
                     nameid="image"
                     id="image"
                     type="file"
+                    accept="image/*"
                     onChange={(event) => {
                         setImage(event.target.files[0])
                     }} />

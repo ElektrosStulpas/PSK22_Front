@@ -10,6 +10,8 @@ const Home = () => {
     const [cities, setCities] = useState([])
     const [sorting, setSortType] = useState("data");
 
+    const [days, setDays] = useState(1)
+
     const [dropdownValue, setDropdown] = useState("Select a city")
 
     const [city, setCity] = useState("")
@@ -28,8 +30,6 @@ const Home = () => {
     const handleClose = () => setShow(false);
 
     const [once, setOnce] = useState(false);
-
-    var days = 5
 
 
     var fetchSort =  async (fetchWhat) => {
@@ -116,6 +116,10 @@ const Home = () => {
         setShow(false);
     }
 
+    const handleDays=(e)=> {
+        setDays(e.target.value);
+    }
+
     const sort = 
         <Dropdown>
         <DropdownButton title="Sort by" variant="success" onSelect={handleSelect}>
@@ -170,8 +174,9 @@ const Home = () => {
             <Col sm={2}>{sort}</Col>
             <Col sm={8}>{form}</Col>
             <Col sm={2} >
-                <Button variant="success" onClick={handleShow}>Filter</Button>
+                <Button  className="justify-content-end" variant="success" onClick={handleShow}>Filter</Button>
             </Col>
+            <div className="daysToRent">Days to rent: <input type="number" min="1" onInput={handleDays} style={{"width":"80px"}}></input> </div> 
             </Row>
                 {listings.length > 0 && (
                     <Row xs={2} md={4}>
@@ -183,7 +188,7 @@ const Home = () => {
                             }
                         }).map(listing =>
                             <Col key={listing.listingId} style={{ marginBottom: '10px' }}>
-                                <ListingCard {...listing} />
+                                <ListingCard listing={listing}  days={days} />
                             </Col>
                         )}
                     </Row>
