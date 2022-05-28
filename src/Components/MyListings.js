@@ -3,19 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authHeader from "../services/auth-header";
 import { Table, Button } from "react-bootstrap";
-import { UserContext } from "../services/UserContext";
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Listings/';
 
 const MyListings = () => {
-
-    const { userGlobalState, login, logout } = useContext(UserContext);
 
     const [listings, setListings] = useState([])
 
     var navigate = useNavigate();
 
     const getMyListings = () => {
-        return axios.get(API_URL, { headers: authHeader() })
+        return axios.get(API_URL + "mine", { headers: authHeader() })
             .then((response) => {
                 console.log(response)
                 setListings(response.data)
@@ -41,9 +38,26 @@ const MyListings = () => {
                 })
     }
 
+    const hideListing = (listing, hideFlag) => {
+        axios.patch(API_URL + listing.listingId + "/hidden", {
+            hidden: hideFlag
+        }, { headers: authHeader() })
+            .then(() => { getMyListings() },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    console.log(resMessage)
+                })
+    }
+
     return (
         <div className="mylistings">
             <h1 style={{ textAlign: 'center' }}>My listings</h1>
+            <h2 style={{ textAlign: 'left' }}>Active listings</h2>
             <Table>
                 <thead>
                     <tr>
@@ -55,7 +69,7 @@ const MyListings = () => {
                 <tbody>
                     {listings.length > 0 && (
                         listings.filter(listing => {
-                            if (listing.ownerUsername === userGlobalState.userName)
+                            if (!listing.hidden)
                                 return listing;
                         }).map(listing =>
                             <tr key={listing.id}>
@@ -64,6 +78,42 @@ const MyListings = () => {
                                 <td key={listing.id}>{listing.description}</td>
                                 <td key={listing.id}><Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button></td>
                                 <td key={listing.id}><Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button></td>
+                                <td key={listing.id}>
+                                    <Button variant="secondary" onClick={() => { hideListing(listing, !listing.hidden) }}>
+                                        {listing.hidden ? "Unhide" : "Hide"}
+                                    </Button>
+                                </td>
+                            </tr>
+                        )
+                    )}
+                </tbody>
+            </Table>
+            <h2 style={{ textAlign: 'left' }}>Hidden listings</h2>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>City</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {listings.length > 0 && (
+                        listings.filter(listing => {
+                            if (listing.hidden)
+                                return listing;
+                        }).map(listing =>
+                            <tr key={listing.id}>
+                                <td key={listing.id}>{listing.title}</td>
+                                <td key={listing.id}>{listing.city}</td>
+                                <td key={listing.id}>{listing.description}</td>
+                                <td key={listing.id}><Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button></td>
+                                <td key={listing.id}><Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button></td>
+                                <td key={listing.id}>
+                                    <Button variant="secondary" onClick={() => { hideListing(listing, !listing.hidden) }}>
+                                        {listing.hidden ? "Unhide" : "Hide"}
+                                    </Button>
+                                </td>
                             </tr>
                         )
                     )}
