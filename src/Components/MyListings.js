@@ -9,8 +9,6 @@ const MyListings = () => {
 
     const [listings, setListings] = useState([])
 
-    var navigate = useNavigate();
-
     const getMyListings = () => {
         return axios.get(API_URL + "mine", { headers: authHeader() })
             .then((response) => {
@@ -58,68 +56,52 @@ const MyListings = () => {
         <div className="mylistings">
             <h1 style={{ textAlign: 'center' }}>My listings</h1>
             <h2 style={{ textAlign: 'left' }}>Active listings</h2>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>City</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listings.length > 0 && (
-                        listings.filter(listing => {
-                            if (!listing.hidden)
-                                return listing;
-                        }).map(listing =>
-                            <tr key={listing.id}>
-                                <td key={listing.id}>{listing.title}</td>
-                                <td key={listing.id}>{listing.city}</td>
-                                <td key={listing.id}>{listing.description}</td>
-                                <td key={listing.id}><Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button></td>
-                                <td key={listing.id}><Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button></td>
-                                <td key={listing.id}>
-                                    <Button variant="secondary" onClick={() => { hideListing(listing, !listing.hidden) }}>
-                                        {listing.hidden ? "Unhide" : "Hide"}
-                                    </Button>
-                                </td>
-                            </tr>
-                        )
-                    )}
-                </tbody>
-            </Table>
+            <ListingTable listings={listings} deleteListing={deleteListing} hideListing={hideListing} listingHideState={false} />
             <h2 style={{ textAlign: 'left' }}>Hidden listings</h2>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>City</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listings.length > 0 && (
-                        listings.filter(listing => {
-                            if (listing.hidden)
-                                return listing;
-                        }).map(listing =>
-                            <tr key={listing.id}>
-                                <td key={listing.id}>{listing.title}</td>
-                                <td key={listing.id}>{listing.city}</td>
-                                <td key={listing.id}>{listing.description}</td>
-                                <td key={listing.id}><Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button></td>
-                                <td key={listing.id}><Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button></td>
-                                <td key={listing.id}>
-                                    <Button variant="secondary" onClick={() => { hideListing(listing, !listing.hidden) }}>
-                                        {listing.hidden ? "Unhide" : "Hide"}
-                                    </Button>
-                                </td>
-                            </tr>
-                        )
-                    )}
-                </tbody>
-            </Table>
+            <ListingTable listings={listings} deleteListing={deleteListing} hideListing={hideListing} listingHideState={true} />
         </div>
+    )
+}
+
+const ListingTable = (props) => {
+    const listings = props.listings
+    const deleteListing = props.deleteListing
+    const hideListing = props.hideListing
+    const listingHideState = props.listingHideState
+
+    var navigate = useNavigate();
+
+    return (
+        <Table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>City</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {listings.length > 0 && (
+                    listings.filter(listing => {
+                        if (listing.hidden === listingHideState)
+                            return listing;
+                    }).map(listing =>
+                        <tr key={listing.id}>
+                            <td key={listing.id}>{listing.title}</td>
+                            <td key={listing.id}>{listing.city}</td>
+                            <td key={listing.id}>{listing.description}</td>
+                            <td key={listing.id}><Button variant="primary" onClick={() => { navigate('/edit-listing', { state: listing }) }}> Edit </Button></td>
+                            <td key={listing.id}><Button variant="secondary" onClick={() => { deleteListing(listing) }}> Delete </Button></td>
+                            <td key={listing.id}>
+                                <Button variant="secondary" onClick={() => { hideListing(listing, !listing.hidden) }}>
+                                    {listing.hidden ? "Unhide" : "Hide"}
+                                </Button>
+                            </td>
+                        </tr>
+                    )
+                )}
+            </tbody>
+        </Table>
     )
 }
 

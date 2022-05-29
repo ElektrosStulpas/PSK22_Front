@@ -93,7 +93,7 @@ const ListingForm = (props) => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-                <Form.Label htmlFor='image'>{editing? "New Picture" : "Picture"}</Form.Label>
+                <Form.Label htmlFor='image'>{editing ? "New Picture" : "Picture"}</Form.Label>
                 <Form.Control className="mb-3"
                     nameid="image"
                     id="image"
@@ -108,7 +108,7 @@ const ListingForm = (props) => {
             <div className='d-grid gap-2'>
                 <Button variant="primary" type="submit"> {editing ? "Update" : "Create"} </Button>
                 {' '}
-                <Button variant="secondary" onClick={() => { navigate('/') }}> Cancel </Button>
+                <Button variant="secondary" onClick={() => { editing ? navigate('/my-listings') : navigate('/') }}> Cancel </Button>
             </div>
 
         </Form>
