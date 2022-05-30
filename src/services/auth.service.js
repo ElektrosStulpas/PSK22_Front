@@ -1,7 +1,6 @@
 import axios from 'axios';
 const API_URL = 'https://gariunaicloud.azurewebsites.net/api/Users/';
 
-// const { user, login_context, logout_context } = useContext(UserContext);
 
 const register = (username, email, password) => {
     return axios.post(API_URL + "register", {
@@ -24,8 +23,13 @@ const login = (username, password) => {
         });
 }
 
+
 const logout = () => {
     localStorage.removeItem("user");
+}
+
+const isAuthenticated = () => {
+    return localStorage.getItem("user") != null
 }
 
 const getCurrentUser = () => {
@@ -37,6 +41,7 @@ const AuthService = {
     login,
     logout,
     getCurrentUser,
+    isAuthenticated,
 };
 
 export default AuthService;

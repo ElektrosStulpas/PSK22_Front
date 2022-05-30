@@ -66,7 +66,7 @@ const EditListing = () => {
     }
 
     return (
-        <div className='listing-form-container'>
+        <div className='center-container'>
             <h1>Update listing</h1>
             <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} listingState={listingState} editing={true} conflictingListing={conflictingState}/>
             <p className='text-danger'>{errorMessage}</p>

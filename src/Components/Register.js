@@ -96,63 +96,61 @@ const Register = () => {
     }
 
     return (
-        <div className="col-md-12">
-            <div className="card card-container">
-
-                <Form onSubmit={handleRegister} ref={form}>
-                    {!successful && (
-                        <div>
-                            <div className="form-group">
-                                <label htmlFor="username">Username</label>
-                                <Input
-                                    type="text"
-                                    className="form-control"
-                                    name="username"
-                                    value={state.username}
-                                    onChange={(e) => updateState(e.target.name, e.target.value)}
-                                    validations={[required, validUsername]}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="email">Email</label>
-                                <Input
-                                    type="text"
-                                    className="form-control"
-                                    name="email"
-                                    value={state.email}
-                                    onChange={(e) => updateState(e.target.name, e.target.value)}
-                                    validations={[required, validEmail]}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">Password</label>
-                                <Input
-                                    type="password"
-                                    className="form-control"
-                                    name="password"
-                                    value={state.password}
-                                    onChange={(e) => updateState(e.target.name, e.target.value)}
-                                    validations={[required, validPassword]}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <button className="btn btn-primary btn-block">Sign Up</button>
-                            </div>
-                        </div>
-                    )}
-                    {message && (
+        <div className="center-container">
+            <h1>Register</h1>
+            <Form onSubmit={handleRegister} ref={form}>
+                {!successful && (
+                    <div>
                         <div className="form-group">
-                            <div
-                                className={successful ? "alert alert-success" : "alert alert-danger"}
-                                role="alert"
-                            >
-                                {message}
-                            </div>
+                            <label htmlFor="username">Username</label>
+                            <Input
+                                type="text"
+                                className="form-control"
+                                name="username"
+                                value={state.username}
+                                onChange={(e) => updateState(e.target.name, e.target.value)}
+                                validations={[required, validUsername]}
+                            />
                         </div>
-                    )}
-                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
-                </Form>
-            </div>
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <Input
+                                type="text"
+                                className="form-control"
+                                name="email"
+                                value={state.email}
+                                onChange={(e) => updateState(e.target.name, e.target.value)}
+                                validations={[required, validEmail]}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <Input
+                                type="password"
+                                className="form-control"
+                                name="password"
+                                value={state.password}
+                                onChange={(e) => updateState(e.target.name, e.target.value)}
+                                validations={[required, validPassword]}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <button className="btn btn-primary btn-block mt-2">Sign Up</button>
+                        </div>
+                    </div>
+                )}
+                {message && (
+                    <div className="form-group">
+                        <div
+                            className={successful ? "alert alert-success" : "alert alert-danger"}
+                            role="alert"
+                        >
+                            {message}
+                        </div>
+                    </div>
+                )}
+                <CheckButton style={{ display: "none" }} ref={checkBtn} />
+            </Form>
         </div>
     );
 }
