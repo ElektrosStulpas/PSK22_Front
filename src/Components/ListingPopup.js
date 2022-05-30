@@ -148,7 +148,7 @@ export function ListingPopup(props) {
                             disabledDays={unavailableDates}
                         />
                         <Button disabled={!isValidDateChosen()} onClick={postOrder}>
-                            Place and order {isValidDateChosen() ? `(${getTotalPrice()}€)` : ''}
+                            Place an order {isValidDateChosen() ? `(${getTotalPrice()}€)` : ''}
                         </Button>
                     </Modal.Footer>
                     :
