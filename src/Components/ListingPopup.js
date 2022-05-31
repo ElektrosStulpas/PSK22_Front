@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react"
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import AuthService from '../services/auth.service';
-const API_URL = `http://gariunaicloud.azurewebsites.net/api`
+const API_URL = `https://gariunaicloud.azurewebsites.net/api`
 
 export function ListingPopup(props) {
 
