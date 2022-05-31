@@ -7,7 +7,7 @@ export const ListingCard = (props) => {
   const [modalShow, setModalShow] = React.useState(false);
   const loadingGif = process.env.PUBLIC_URL + '/loading.gif'
   const defaultImage = process.env.PUBLIC_URL + '/no_image.png'
-  const realImageUrl = `http://gariunaicloud.azurewebsites.net/api/Listings/${props.listing.listingId}/image`
+  const realImageUrl = `https://gariunaicloud.azurewebsites.net/api/Listings/${props.listing.listingId}/image`
   
   const [imageUrl, setImageUrl] = useState(loadingGif)
 
