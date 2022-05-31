@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/PSK22_Front/static/css/main.a25dd7ce.css",
-    "main.js": "/PSK22_Front/static/js/main.db26fb4f.js",
+    "main.js": "/PSK22_Front/static/js/main.0e0f9385.js",
     "index.html": "/PSK22_Front/index.html",
     "main.a25dd7ce.css.map": "/PSK22_Front/static/css/main.a25dd7ce.css.map",
-    "main.db26fb4f.js.map": "/PSK22_Front/static/js/main.db26fb4f.js.map"
+    "main.0e0f9385.js.map": "/PSK22_Front/static/js/main.0e0f9385.js.map"
   },
   "entrypoints": [
     "static/css/main.a25dd7ce.css",
-    "static/js/main.db26fb4f.js"
+    "static/js/main.0e0f9385.js"
   ]
 }
