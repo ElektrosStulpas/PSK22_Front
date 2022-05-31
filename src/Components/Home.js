@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {Button,Card,Container,Row,Col,Form, Dropdown, DropdownButton, Modal, ModalDialog, ModalBody} from 'react-bootstrap'; // eslint-disable-line
+import { Button, Card, Container, Row, Col, Form, Dropdown, DropdownButton, Modal, ModalDialog, ModalBody } from 'react-bootstrap'; // eslint-disable-line
 import { ListingCard } from "./ListingCard";
 
 
@@ -15,12 +15,12 @@ const Home = () => {
     const [dropdownValue, setDropdown] = useState("Select a city")
 
     const [city, setCity] = useState("")
-    const [ price, setPrice ] = useState("");
+    const [price, setPrice] = useState("");
 
     const [show, setShow] = useState(false);
     const handleApply = () => {
         setShow(false);
-        fetchFilter(city+"&"+price.substring(1))
+        fetchFilter(city + "&" + price.substring(1))
 
     }
     const handleShow = () => {
@@ -32,38 +32,38 @@ const Home = () => {
     const [once, setOnce] = useState(false);
 
 
-    var fetchSort =  async (fetchWhat) => {
+    var fetchSort = async (fetchWhat) => {
         let url = `https://gariunaicloud.azurewebsites.net/api/Listings`
         if (sorting != "data") {
-            url = `https://gariunaicloud.azurewebsites.net/api/Listings?SortOrder=${fetchWhat}` 
+            url = `https://gariunaicloud.azurewebsites.net/api/Listings?SortOrder=${fetchWhat}`
             if (city) {
-                url = url+ `${city}&${price.substring(1)} `
+                url = url + `${city}&${price.substring(1)} `
             }
         }
         await fetch(url)
-          .then(response => {
-            return response.json()
-          })
-          .then(data => {
-            setListing(data)
-          })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                setListing(data)
+            })
     }
 
-    const fetchFilter =  async (filterQuery) => {
+    const fetchFilter = async (filterQuery) => {
         var url = `https://gariunaicloud.azurewebsites.net/api/Listings${filterQuery}`
-        if(sorting != "data") {
+        if (sorting != "data") {
             url = `https://gariunaicloud.azurewebsites.net/api/Listings${filterQuery}&SortOrder=${sorting}`
         }
-        if(filterQuery == "basic") {
+        if (filterQuery == "basic") {
             url = "https://gariunaicloud.azurewebsites.net/api/Listings"
         }
         await fetch(url)
-          .then(response => {
-            return response.json()
-          })
-          .then(data => {
-            setListing(data)
-          })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                setListing(data)
+            })
     }
 
 
@@ -76,108 +76,118 @@ const Home = () => {
     }, [sorting])
 
     useEffect(() => {
-        if(once == true) {
-        var cities1 = []
-        listings.forEach(ele => {
-            cities1.push(ele.city)
-        })
-        cities1 = [...new Set(cities1)];
-        cities1 = cities1.filter(function(e){return e}); 
-        cities1 = cities1.sort()
-        setCities(cities1)
-    }
+        if (once == true) {
+            var cities1 = []
+            listings.forEach(ele => {
+                cities1.push(ele.city)
+            })
+            cities1 = [...new Set(cities1)];
+            cities1 = cities1.filter(function (e) { return e });
+            cities1 = cities1.sort()
+            setCities(cities1)
+        }
     }, [once])
 
 
-    const handleInput = (e)=>{
+    const handleInput = (e) => {
         setPrice(`?MaxPrice=${e.target.value}`);
-      }
+    }
 
-    const form = 
+    const form =
         <Form>
-            <Form.Group className="w-50 mx-auto py-2" controlId="search">
-            <Form.Control type="string" onChange={event => setQuery(event.target.value)} placeholder="Search for anything" />
+            <Form.Group className=" mx-auto py-2" controlId="search">
+                <Form.Control type="string" onChange={event => setQuery(event.target.value)} placeholder="Search for anything" />
             </Form.Group>
         </Form>
 
-    const handleSelect=(e)=>{
-    setSortType(e)
+    const handleSelect = (e) => {
+        setSortType(e)
     }
 
-    const handleCitySelect=(e)=> {
+    const handleCitySelect = (e) => {
         setDropdown(e)
-        if(e != "Select an Item") {setCity(`?City=${e}`)}
+        if (e != "Select an Item") { setCity(`?City=${e}`) }
     }
 
-    const handleReset=()=> {
+    const handleReset = () => {
         fetchFilter("basic")
         setDropdown("Select an Item")
         setPrice("")
         setShow(false);
     }
 
-    const handleDays=(e)=> {
+    const handleDays = (e) => {
         setDays(e.target.value);
     }
 
-    const sort = 
+    const sort =
         <Dropdown>
-        <DropdownButton title="Sort by" variant="success" onSelect={handleSelect}>
-            <Dropdown.Item  eventKey="PriceAsc" href="">Price ascending</Dropdown.Item>
-            <Dropdown.Item eventKey="PriceDesc" href="">Price descending</Dropdown.Item>
-            <Dropdown.Item eventKey="NameAsc" href="">Name ascending</Dropdown.Item>
-            <Dropdown.Item eventKey="NameDesc" href="">Name descending</Dropdown.Item>
-        </DropdownButton>
+            <DropdownButton title="Sort by" variant="success" onSelect={handleSelect}>
+                <Dropdown.Item eventKey="PriceAsc" href="">Price ascending</Dropdown.Item>
+                <Dropdown.Item eventKey="PriceDesc" href="">Price descending</Dropdown.Item>
+                <Dropdown.Item eventKey="NameAsc" href="">Name ascending</Dropdown.Item>
+                <Dropdown.Item eventKey="NameDesc" href="">Name descending</Dropdown.Item>
+            </DropdownButton>
         </Dropdown>
 
-    const filter = 
+    const filter =
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Filter</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h3>Price max: { price.substring(10) }</h3>
-                <input type="number" onInput={ handleInput } />
-                <h3>Cities: </h3> 
+                <h3>Price max: {price.substring(10)}</h3>
+                <input type="number" onInput={handleInput} />
+                <h3>Cities: </h3>
                 {cities.length > 0 && (
                     <div>
                         <Dropdown>
-                        <DropdownButton className="dropdownFilter" title={dropdownValue} variant="success" onSelect={handleCitySelect}>
-                        <Dropdown.Item eventKey={"Select an Item"} > Select an Item </Dropdown.Item>
-                        {cities.map((city,index) => (
-                        <Dropdown.Item eventKey={city} key={index}> {city} </Dropdown.Item>
-                    ))}
-                    </DropdownButton>
-                    </Dropdown>
+                            <DropdownButton className="dropdownFilter" title={dropdownValue} variant="success" onSelect={handleCitySelect}>
+                                <Dropdown.Item eventKey={"Select an Item"} > Select an Item </Dropdown.Item>
+                                {cities.map((city, index) => (
+                                    <Dropdown.Item eventKey={city} key={index}> {city} </Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+                        </Dropdown>
                     </div>
                 )}
-                </Modal.Body>
+            </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={handleReset}>
-                Reset Filter
-            </Button>
-            <Button variant="secondary" onClick={handleClose}>
-                Close
-            </Button>
-            <Button variant="primary" onClick={handleApply}>
-                Apply Filter
-            </Button>
+                <Button variant="secondary" onClick={handleReset}>
+                    Reset Filter
+                </Button>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={handleApply}>
+                    Apply Filter
+                </Button>
             </Modal.Footer>
         </Modal>
 
     return (
         <Container>
-        <div className="home">
             {filter}
-            <h1 style={{textAlign:'center'}}>Listings</h1>
-            <Row>
-            <Col sm={2}>{sort}</Col>
-            <Col sm={8}>{form}</Col>
-            <Col sm={2} >
-                <Button  className="justify-content-end" variant="success" onClick={handleShow}>Filter</Button>
-            </Col>
-            <div className="daysToRent">Days to rent: <input type="number" min="1" onInput={handleDays} style={{"width":"80px"}}></input> </div> 
-            </Row>
+            <div>
+                <h1 className="text-center mt-3">Listings</h1>
+                <Row className="align-items-center mb-3 mt-3">
+                    <Col xs="1">
+                        {sort}
+                    </Col>
+                    <Col xs="1">
+                        <Button className="justify-content-end" variant="success" onClick={handleShow}>Filter</Button>
+                    </Col>
+                    <Col>
+                        {form}
+                    </Col>
+                    <Col xs="2">
+                        {"Days to rent: "}
+                        <input id ="days" type="number" min="1" onInput={handleDays} style={{ "width": "3em" }}/>
+                    </Col>
+                    
+                    
+                    
+                </Row>
                 {listings.length > 0 && (
                     <Row xs={2} md={4}>
                         {listings.filter(listing => { // eslint-disable-line
@@ -188,7 +198,7 @@ const Home = () => {
                             }
                         }).map(listing =>
                             <Col key={listing.listingId} style={{ marginBottom: '10px' }}>
-                                <ListingCard listing={listing}  days={days} />
+                                <ListingCard listing={listing} days={days} />
                             </Col>
                         )}
                     </Row>

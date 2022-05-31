@@ -19,12 +19,12 @@ code {
   border-bottom: 1px solid #000000;
 }
 
-.listing-form-container {
+.center-container {
   width: 50%;
   margin: 0 auto;
 }
 
-.listing-form-container h1 {
+.center-container h1 {
   padding-top: 20px;
 }
 

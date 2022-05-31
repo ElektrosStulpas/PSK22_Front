@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { HashRouter as Router } from 'react-router-dom'
-import UserProvider from './services/UserContext'
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
@@ -13,10 +12,8 @@ import UserProvider from './services/UserContext'
 // );
 
 ReactDOM.render(
-    <UserProvider>
         <Router>
-            <App />
-        </Router>
-    </UserProvider>,
+            <App />,
+        </Router>,
     document.getElementById('root')
 );

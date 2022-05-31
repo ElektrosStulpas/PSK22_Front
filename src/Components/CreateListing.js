@@ -54,7 +54,7 @@ const CreateListing = () => {
     }
 
     return (
-        <div className='listing-form-container'>
+        <div className='center-container'>
             <h1>Create new listing</h1>
             <ListingForm handleSubmit={handleSubmit} imageState={[image, setImage]} />
         </div>
